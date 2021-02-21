@@ -15,6 +15,6 @@ class BeepTimerApp(App):
 
 if __name__ == '__main__':
     with open("app_layout.kv", encoding='utf8') as f:
-        my = Builder.load_string(f.read())
+        Builder.load_string(f.read())
     Window.clearcolor = [1, 1, 1, 1]
     BeepTimerApp().run()

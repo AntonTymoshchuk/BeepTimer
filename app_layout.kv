@@ -2,8 +2,8 @@
     color: [0, 0, 0, 1]
     font_size: sp(18)
     height: dp(30)
-    background_normal: 'colors/blue/500.png'
-    background_down: 'colors/blue/300.png'
+    background_normal: 'colors/grey/300.png'
+    background_down: 'colors/grey/400.png'
     border: [0, 0, 0, 0]
 
 <SquareButton@StandardButton>:
@@ -25,6 +25,7 @@
     color: [0, 0, 0, 1]
     font_size: sp(18)
     halign: 'center'
+    multiline: False
     background_normal: 'colors/grey/100.png'
     background_active: 'colors/grey/200.png'
     background_disabled_normal: 'colors/grey/300.png'
@@ -36,6 +37,12 @@
 <SecondsTextInput@TimeTextInput>:
     text: '60'
 
+<MillisecondsTextInput@TimeTextInput>:
+    text: '1000'
+
+<FrequencyTextInput@TimeTextInput>:
+    text: '1000'
+
 <StandardLabel@Label>:
     size_hint: (None, None)
     size: self.texture_size
@@ -43,20 +50,93 @@
     color: [0, 0, 0, 1]
     font_size: sp(18)
 
-<SignalLayout@BoxLayout>:
-    orientation: 'vertical'
-    size_hint: (1, None)
+<SignalLayout@GridLayout>:
+    size_hint: (0.9, None)
+    pos_hint: {'right': 0.95}
     height: dp(100)
     canvas.before:
         Color:
-            rgb: (1, 0, 0)
-        Rectangle:
-            size: self.size
-            pos: self.pos
+            rgb: (0, 0, 0)
+        Line:
+            width: 1
+            rectangle: (self.x, self.y, self.width, self.height)
+    rows: 3
+    StandardLabel:
+        text: 'Сигнал за:'
+    SecondsTextInput:
+    StandardLabel:
+        text: 'сек'
     BoxLayout:
         orientation: 'horizontal'
+        PlusButton:
+        MinusButton:
+
+    StandardLabel:
+        text: 'Длительность:'
+    MillisecondsTextInput:
+    StandardLabel:
+        text: 'мсек'
+    BoxLayout:
+        orientation: 'horizontal'
+        PlusButton:
+        MinusButton:
+
+    StandardLabel:
+        text: 'Частота:'
+    FrequencyTextInput:
+    StandardLabel:
+        text: 'гц'
+    BoxLayout:
+        orientation: 'horizontal'
+        PlusButton:
+        MinusButton:
+
+<TimerLayout@BoxLayout>:
+    size_hint: (0.9, None)
+    pos_hint: {'right': 0.95}
+    height: dp(300)
+    canvas.before:
+        Color:
+            rgb: (0, 0, 0)
+        Line:
+            width: 1
+            rectangle: (self.x, self.y, self.width, self.height)
+    orientation: 'vertical'
+    GridLayout:
+        cols: 3
         StandardLabel:
-            text: 'Сигнал за:'
+            text: 'Таймер на каждых:'
+        MinutesTextInput:
+        StandardLabel:
+            text: 'мин'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (0.9, None)
+        pos_hint: {'right': 0.95}
+        height: dp(230)
+        canvas.before:
+            Color:
+                rgb: (0, 0, 0)
+            Line:
+                width: 1
+                rectangle: (self.x, self.y, self.width, self.height)
+        SignalLayout:
+        SignalLayout:
+        WideButton:
+            text: 'Добавить сигнал'
+    WideButton:
+        text: 'Запустить таймер'
 
 <BeepTimerLayout>:
-    SignalLayout:
+    ScrollView:
+        do_scroll_y: True
+        always_overscroll: False
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: (1, None)
+            height: dp(1500)
+            TimerLayout:
+            TimerLayout:
+            TimerLayout:
+            TimerLayout:
+            TimerLayout:
