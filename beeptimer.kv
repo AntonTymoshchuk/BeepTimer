@@ -1,17 +1,23 @@
-<SquareButton@Button>:
-    size_hint: (None, None)
-    size: (dp(30), dp(30))
+<StandardButton@Button>:
     color: [0, 0, 0, 1]
     font_size: sp(18)
+    height: dp(30)
     background_normal: 'colors/blue/500.png'
     background_down: 'colors/blue/300.png'
     border: [0, 0, 0, 0]
+
+<SquareButton@StandardButton>:
+    size_hint: (None, None)
+    width: dp(30)
 
 <PlusButton@SquareButton>:
     text: '+'
 
 <MinusButton@SquareButton>:
-    text: '--'
+    text: '−'
+
+<WideButton@StandardButton>:
+    size_hint: (1, None)
 
 <TimeTextInput@TextInput>:
     size_hint: (None, None)
@@ -32,16 +38,25 @@
 
 <StandardLabel@Label>:
     size_hint: (None, None)
+    size: self.texture_size
     height: dp(30)
     color: [0, 0, 0, 1]
     font_size: sp(18)
 
-<NameLabel@StandardLabel>:
-    width: dp(100)
-
-<TypeLabel@StandardLabel>:
-    height: dp(50)
+<SignalLayout@BoxLayout>:
+    orientation: 'vertical'
+    size_hint: (1, None)
+    height: dp(100)
+    canvas.before:
+        Color:
+            rgb: (1, 0, 0)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: 'horizontal'
+        StandardLabel:
+            text: 'Сигнал за:'
 
 <BeepTimerLayout>:
-    NameLabel:
-        text: 'Таймер на:'
+    SignalLayout:
