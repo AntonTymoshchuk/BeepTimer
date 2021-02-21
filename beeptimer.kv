@@ -1,0 +1,47 @@
+<SquareButton@Button>:
+    size_hint: (None, None)
+    size: (dp(30), dp(30))
+    color: [0, 0, 0, 1]
+    font_size: sp(18)
+    background_normal: 'colors/blue/500.png'
+    background_down: 'colors/blue/300.png'
+    border: [0, 0, 0, 0]
+
+<PlusButton@SquareButton>:
+    text: '+'
+
+<MinusButton@SquareButton>:
+    text: '--'
+
+<TimeTextInput@TextInput>:
+    size_hint: (None, None)
+    size: (dp(60), dp(30))
+    color: [0, 0, 0, 1]
+    font_size: sp(18)
+    halign: 'center'
+    background_normal: 'colors/grey/100.png'
+    background_active: 'colors/grey/200.png'
+    background_disabled_normal: 'colors/grey/300.png'
+    border: [0, 0, 0, 0]
+
+<MinutesTextInput@TimeTextInput>:
+    text: '5'
+
+<SecondsTextInput@TimeTextInput>:
+    text: '60'
+
+<StandardLabel@Label>:
+    size_hint: (None, None)
+    height: dp(30)
+    color: [0, 0, 0, 1]
+    font_size: sp(18)
+
+<NameLabel@StandardLabel>:
+    width: dp(100)
+
+<TypeLabel@StandardLabel>:
+    height: dp(50)
+
+<BeepTimerLayout>:
+    NameLabel:
+        text: 'Таймер на:'
