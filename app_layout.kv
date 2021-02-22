@@ -19,7 +19,29 @@
 <WideButton@StandardButton>:
     size_hint: (1, None)
 
-<TimeTextInput@TextInput>:
+<AddSignalButton@WideButton>:
+    size_hint: (0.9, None)
+    pos_hint: {'right': 0.95}
+    text: 'Добавить сигнал'
+    on_release: app.add_signal(self)
+
+<AddTimerButton@WideButton>:
+    text: 'Добавить таймер'
+    on_release: app.add_timer(self)
+
+<DeleteButton@WideButton>:
+    size_hint: (None, None)
+    width: dp(150)
+
+<DeleteSignalButton@DeleteButton>:
+    text: 'Удалить сигнал'
+    on_release: app.remove_signal(self)
+
+<DeleteTimerButton@DeleteButton>:
+    text: 'Удалить таймер'
+    on_release: app.remove_timer(self)
+
+<ValueTextInput@TextInput>:
     size_hint: (None, None)
     size: (dp(60), dp(30))
     color: [0, 0, 0, 1]
@@ -31,16 +53,16 @@
     background_disabled_normal: 'colors/grey/300.png'
     border: [0, 0, 0, 0]
 
-<MinutesTextInput@TimeTextInput>:
+<MinutesTextInput@ValueTextInput>:
     text: '5'
 
-<SecondsTextInput@TimeTextInput>:
+<SecondsTextInput@ValueTextInput>:
     text: '60'
 
-<MillisecondsTextInput@TimeTextInput>:
+<MillisecondsTextInput@ValueTextInput>:
     text: '1000'
 
-<FrequencyTextInput@TimeTextInput>:
+<FrequencyTextInput@ValueTextInput>:
     text: '1000'
 
 <StandardLabel@Label>:
@@ -51,6 +73,7 @@
     font_size: sp(18)
 
 <SignalLayout@GridLayout>:
+    cols: 2
     size_hint: (0.9, None)
     pos_hint: {'right': 0.95}
     height: dp(100)
@@ -60,41 +83,49 @@
         Line:
             width: 1
             rectangle: (self.x, self.y, self.width, self.height)
-    rows: 3
-    StandardLabel:
-        text: 'Сигнал за:'
-    SecondsTextInput:
-    StandardLabel:
-        text: 'сек'
-    BoxLayout:
-        orientation: 'horizontal'
-        PlusButton:
-        MinusButton:
+    GridLayout:
+        rows: 3
+        StandardLabel:
+            text: 'Сигнал за:'
+        SecondsTextInput:
+        StandardLabel:
+            text: 'сек'
+        BoxLayout:
+            orientation: 'horizontal'
+            PlusButton:
+                on_release: app.increase_seconds_value(self)
+            MinusButton:
+                on_release: app.reduce_seconds_value(self)
 
-    StandardLabel:
-        text: 'Длительность:'
-    MillisecondsTextInput:
-    StandardLabel:
-        text: 'мсек'
-    BoxLayout:
-        orientation: 'horizontal'
-        PlusButton:
-        MinusButton:
+        StandardLabel:
+            text: 'Длительность:'
+        MillisecondsTextInput:
+        StandardLabel:
+            text: 'мсек'
+        BoxLayout:
+            orientation: 'horizontal'
+            PlusButton:
+                on_release: app.increase_milliseconds_value(self)
+            MinusButton:
+                on_release: app.reduce_milliseconds_value(self)
 
-    StandardLabel:
-        text: 'Частота:'
-    FrequencyTextInput:
-    StandardLabel:
-        text: 'гц'
-    BoxLayout:
-        orientation: 'horizontal'
-        PlusButton:
-        MinusButton:
+        StandardLabel:
+            text: 'Частота:'
+        FrequencyTextInput:
+        StandardLabel:
+            text: 'гц'
+        BoxLayout:
+            orientation: 'horizontal'
+            PlusButton:
+                on_release: app.increase_frequency_value(self)
+            MinusButton:
+                on_release: app.reduce_frequency_value(self)
+    DeleteSignalButton:
 
 <TimerLayout@BoxLayout>:
     size_hint: (0.9, None)
     pos_hint: {'right': 0.95}
-    height: dp(300)
+    height: dp(130)
     canvas.before:
         Color:
             rgb: (0, 0, 0)
@@ -103,27 +134,26 @@
             rectangle: (self.x, self.y, self.width, self.height)
     orientation: 'vertical'
     GridLayout:
-        cols: 3
+        cols: 6
         StandardLabel:
             text: 'Таймер на каждых:'
         MinutesTextInput:
         StandardLabel:
             text: 'мин'
+        PlusButton:
+            on_release: app.increase_minutes_value(self)
+        MinusButton:
+            on_release: app.reduce_minutes_value(self)
+        AnchorLayout:
+            anchor_x: 'right'
+            anchor_y: 'top'
+            size_hint: (1, None)
+            height: dp(30)
+            DeleteTimerButton:
     BoxLayout:
         orientation: 'vertical'
-        size_hint: (0.9, None)
-        pos_hint: {'right': 0.95}
-        height: dp(230)
-        canvas.before:
-            Color:
-                rgb: (0, 0, 0)
-            Line:
-                width: 1
-                rectangle: (self.x, self.y, self.width, self.height)
-        SignalLayout:
-        SignalLayout:
-        WideButton:
-            text: 'Добавить сигнал'
+        size_hint: (1, 1)
+        AddSignalButton:
     WideButton:
         text: 'Запустить таймер'
 
@@ -132,13 +162,8 @@
         do_scroll_y: True
         always_overscroll: False
         BoxLayout:
+            id: main_container
             orientation: 'vertical'
             size_hint: (1, None)
-            height: dp(1530)
-            TimerLayout:
-            TimerLayout:
-            TimerLayout:
-            TimerLayout:
-            TimerLayout:
-            WideButton:
-                text: 'Добавить таймер'
+            height: dp(30)
+            AddTimerButton:
