@@ -11,6 +11,7 @@ from my_widgets.milliseconds_text_input import MillisecondsTextInput
 from my_widgets.minutes_text_input import MinutesTextInput
 from my_widgets.seconds_text_input import SecondsTextInput
 from my_widgets.signal_layout import SignalLayout
+from my_widgets.time_unit_label import TimeUnitLabel
 from my_widgets.timer_layout import TimerLayout
 
 
@@ -22,6 +23,7 @@ class BeepTimerApp(App):
     def __init__(self, **kwargs):
         App.__init__(self, **kwargs)
         self.ids = None
+        self.num = 0
 
     def build(self):
         layout = BeepTimerLayout()
@@ -36,8 +38,9 @@ class BeepTimerApp(App):
             if isinstance(button_tbr, AddSignalButton):
                 break
             pos += 1
+        self.num += 1
         signals_container.remove_widget(button_tbr)
-        signals_container.add_widget(SignalLayout())
+        signals_container.add_widget(SignalLayout(self.num))
         signals_container.add_widget(AddSignalButton())
         timer_layout = signals_container.parent
         timer_layout.height += dp(100)
@@ -197,6 +200,26 @@ class BeepTimerApp(App):
         if value > 0:
             value -= 1
         input_tbe.text = str(value)
+
+    def set_second_time_unit(self, sender):
+        container = sender.parent
+        pos = 0
+        while True:
+            label_tbe = container.children[pos]
+            if isinstance(label_tbe, TimeUnitLabel):
+                break
+            pos += 1
+        label_tbe.text = ' сек '
+
+    def set_minute_time_unit(self, sender):
+        container = sender.parent
+        pos = 0
+        while True:
+            label_tbe = container.children[pos]
+            if isinstance(label_tbe, TimeUnitLabel):
+                break
+            pos += 1
+        label_tbe.text = ' мин '
 
 
 if __name__ == '__main__':

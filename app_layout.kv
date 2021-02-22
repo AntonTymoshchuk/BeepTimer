@@ -68,9 +68,15 @@
 <StandardLabel@Label>:
     size_hint: (None, None)
     size: self.texture_size
-    height: dp(30)
     color: [0, 0, 0, 1]
     font_size: sp(18)
+
+<TimeUnitLabel@StandardLabel>:
+    text: ' сек '
+
+<StandardCheckBox@CheckBox>:
+    size_hint: (None, None)
+    size: (dp(30), dp(30))
 
 <SignalLayout@GridLayout>:
     cols: 2
@@ -85,41 +91,55 @@
             rectangle: (self.x, self.y, self.width, self.height)
     GridLayout:
         rows: 3
-        StandardLabel:
-            text: 'Сигнал за:'
-        SecondsTextInput:
-        StandardLabel:
-            text: 'сек'
         BoxLayout:
-            orientation: 'horizontal'
-            PlusButton:
-                on_release: app.increase_seconds_value(self)
-            MinusButton:
-                on_release: app.reduce_seconds_value(self)
-
-        StandardLabel:
-            text: 'Длительность:'
-        MillisecondsTextInput:
-        StandardLabel:
-            text: 'мсек'
+            StandardLabel:
+                text: 'Сигнал за: '
+            SecondsTextInput:
+            TimeUnitLabel:
+            BoxLayout:
+                size_hint: (None, None)
+                width: dp(60)
+                orientation: 'horizontal'
+                PlusButton:
+                    on_release: app.increase_seconds_value(self)
+                MinusButton:
+                    on_release: app.reduce_seconds_value(self)
+            StandardLabel:
+                text: '   Время в: '
+            StandardCheckBox:
+                active: True
+                on_active: app.set_second_time_unit(self)
+            StandardLabel:
+                text: ' секундах, '
+            StandardCheckBox:
+                active: False
+                on_active: app.set_minute_time_unit(self)
+            StandardLabel:
+                text: ' минутах'
         BoxLayout:
-            orientation: 'horizontal'
-            PlusButton:
-                on_release: app.increase_milliseconds_value(self)
-            MinusButton:
-                on_release: app.reduce_milliseconds_value(self)
-
-        StandardLabel:
-            text: 'Частота:'
-        FrequencyTextInput:
-        StandardLabel:
-            text: 'гц'
+            StandardLabel:
+                text: 'Длительность:'
+            MillisecondsTextInput:
+            StandardLabel:
+                text: 'мсек'
+            BoxLayout:
+                orientation: 'horizontal'
+                PlusButton:
+                    on_release: app.increase_milliseconds_value(self)
+                MinusButton:
+                    on_release: app.reduce_milliseconds_value(self)
         BoxLayout:
-            orientation: 'horizontal'
-            PlusButton:
-                on_release: app.increase_frequency_value(self)
-            MinusButton:
-                on_release: app.reduce_frequency_value(self)
+            StandardLabel:
+                text: 'Частота:'
+            FrequencyTextInput:
+            StandardLabel:
+                text: 'гц'
+            BoxLayout:
+                orientation: 'horizontal'
+                PlusButton:
+                    on_release: app.increase_frequency_value(self)
+                MinusButton:
+                    on_release: app.reduce_frequency_value(self)
     DeleteSignalButton:
 
 <TimerLayout@BoxLayout>:

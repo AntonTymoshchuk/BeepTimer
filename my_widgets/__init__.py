@@ -6,4 +6,5 @@ __all__ = ['add_signal_button', 'add_timer_button',
            'seconds_text_input', 'signal_layout',
            'square_button', 'standard_button',
            'standard_label', 'timer_layout',
-           'value_text_input', 'wide_button']
+           'value_text_input', 'wide_button',
+           'standard_check_box', 'time_unit_label']
