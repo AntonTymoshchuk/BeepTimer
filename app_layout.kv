@@ -4,6 +4,7 @@
     height: dp(30)
     background_normal: 'colors/grey/300.png'
     background_down: 'colors/grey/400.png'
+    background_disabled_normal: 'colors/grey/500.png'
     border: [0, 0, 0, 0]
 
 <SquareButton@StandardButton>:
@@ -44,7 +45,6 @@
 <ValueTextInput@TextInput>:
     size_hint: (None, None)
     size: (dp(60), dp(30))
-    color: [0, 0, 0, 1]
     font_size: sp(18)
     halign: 'center'
     multiline: False
@@ -56,7 +56,7 @@
 <MinutesTextInput@ValueTextInput>:
     text: '5'
 
-<SecondsTextInput@ValueTextInput>:
+<SomeTimeTextInput@ValueTextInput>:
     text: '60'
 
 <MillisecondsTextInput@ValueTextInput>:
@@ -94,7 +94,7 @@
         BoxLayout:
             StandardLabel:
                 text: 'Сигнал за: '
-            SecondsTextInput:
+            SomeTimeTextInput:
             TimeUnitLabel:
             BoxLayout:
                 size_hint: (None, None)
@@ -176,6 +176,7 @@
         AddSignalButton:
     WideButton:
         text: 'Запустить таймер'
+        on_release: app.start_timer(self)
 
 <BeepTimerLayout>:
     ScrollView:

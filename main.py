@@ -3,16 +3,24 @@ from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
+from kivy.uix.gridlayout import GridLayout
 
 from my_widgets.add_signal_button import AddSignalButton
 from my_widgets.add_timer_button import AddTimerButton
+from my_widgets.delete_signal_button import DeleteSignalButton
+from my_widgets.delete_timer_button import DeleteTimerButton
 from my_widgets.frequency_text_input import FrequencyTextInput
 from my_widgets.milliseconds_text_input import MillisecondsTextInput
+from my_widgets.minus_button import MinusButton
 from my_widgets.minutes_text_input import MinutesTextInput
-from my_widgets.seconds_text_input import SecondsTextInput
+from my_widgets.plus_button import PlusButton
+from my_widgets.some_time_text_input import SomeTimeTextInput
 from my_widgets.signal_layout import SignalLayout
+from my_widgets.standard_check_box import StandardCheckBox
 from my_widgets.time_unit_label import TimeUnitLabel
 from my_widgets.timer_layout import TimerLayout
+
+from datetime import datetime
 
 
 class BeepTimerLayout(BoxLayout):
@@ -78,7 +86,7 @@ class BeepTimerApp(App):
         pos = 0
         while True:
             input_tbe = container.children[pos]
-            if isinstance(input_tbe, SecondsTextInput):
+            if isinstance(input_tbe, SomeTimeTextInput):
                 break
             pos += 1
         if input_tbe.text == '':
@@ -94,7 +102,7 @@ class BeepTimerApp(App):
         pos = 0
         while True:
             input_tbe = container.children[pos]
-            if isinstance(input_tbe, SecondsTextInput):
+            if isinstance(input_tbe, SomeTimeTextInput):
                 break
             pos += 1
         if input_tbe.text == '':
@@ -220,6 +228,81 @@ class BeepTimerApp(App):
                 break
             pos += 1
         label_tbe.text = ' мин '
+
+    def start_timer(self, sender):
+        timer_layout = sender.parent
+        if not timer_layout.started:
+            sender.text = 'Остановить таймер'
+            timer_layout.started = True
+            header = None
+            for child in timer_layout.children:
+                if isinstance(child, GridLayout):
+                    header = child
+                    break
+            timer_value = None
+            for child in header.children:
+                if isinstance(child, MinutesTextInput):
+                    timer_value = int(child.text)
+                    break
+            signals_layout = None
+            for child in timer_layout.children:
+                if isinstance(child, BoxLayout):
+                    signals_layout = child
+                    break
+            signal_containers = []
+            for child in signals_layout.children:
+                if isinstance(child, SignalLayout):
+                    signal_containers.append(child)
+            signals_info = []
+            for child in signal_containers:
+                signal_info = {}
+                self.get_signal_container_info(child, signal_info)
+                signals_info.append(signal_info)
+            self.change_children_state(timer_layout, True)
+        else:
+            sender.text = 'Запустить таймер'
+            timer_layout.started = False
+            self.change_children_state(timer_layout, False)
+
+    def change_children_state(self, parent, value):
+        for child in parent.children:
+            if isinstance(child, MinutesTextInput):
+                child.disabled = value
+            elif isinstance(child, SomeTimeTextInput):
+                child.disabled = value
+            elif isinstance(child, MillisecondsTextInput):
+                child.disabled = value
+            elif isinstance(child, FrequencyTextInput):
+                child.disabled = value
+            elif isinstance(child, StandardCheckBox):
+                child.disabled = value
+            elif isinstance(child, PlusButton):
+                child.disabled = value
+            elif isinstance(child, MinusButton):
+                child.disabled = value
+            elif isinstance(child, DeleteSignalButton):
+                child.disabled = value
+            elif isinstance(child, AddSignalButton):
+                child.disabled = value
+            elif isinstance(child, DeleteTimerButton):
+                child.disabled = value
+            self.change_children_state(child, value)
+
+    def get_signal_container_info(self, parent, signal_info):
+        for child in parent.children:
+            if isinstance(child, SomeTimeTextInput):
+                signal_info['time_to_signal'] = int(child.text)
+            elif isinstance(child, TimeUnitLabel):
+                if child.text[1: -1] == 'сек':
+                    time_unit = 'second'
+                else:
+                    time_unit = 'minute'
+                signal_info['time_unit'] = time_unit
+            elif isinstance(child, MillisecondsTextInput):
+                signal_info['duration'] = int(child.text)
+            elif isinstance(child, FrequencyTextInput):
+                signal_info['frequency'] = int(child.text)
+            self.get_signal_container_info(child, signal_info)
 
 
 if __name__ == '__main__':
