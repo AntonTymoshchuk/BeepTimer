@@ -20,7 +20,8 @@ from my_widgets.standard_check_box import StandardCheckBox
 from my_widgets.time_unit_label import TimeUnitLabel
 from my_widgets.timer_layout import TimerLayout
 
-from datetime import datetime
+from beep_thread import BeepThread
+from my_widgets.wide_button import WideButton
 
 
 class BeepTimerLayout(BoxLayout):
@@ -32,6 +33,10 @@ class BeepTimerApp(App):
         App.__init__(self, **kwargs)
         self.ids = None
         self.num = 0
+        self.timers_info = []
+        beep_thread = BeepThread(self)
+        beep_thread.daemon = True
+        beep_thread.start()
 
     def build(self):
         layout = BeepTimerLayout()
@@ -51,6 +56,13 @@ class BeepTimerApp(App):
         signals_container.add_widget(SignalLayout(self.num))
         signals_container.add_widget(AddSignalButton())
         timer_layout = signals_container.parent
+        pos = 0
+        while True:
+            button_tbe = timer_layout.children[pos]
+            if isinstance(button_tbe, WideButton):
+                break
+            pos += 1
+        button_tbe.disabled = False
         timer_layout.height += dp(100)
         self.ids.main_container.height += dp(100)
 
@@ -59,6 +71,14 @@ class BeepTimerApp(App):
         signals_container = signal_layout_tbr.parent
         signals_container.remove_widget(signal_layout_tbr)
         timer_layout = signals_container.parent
+        if len(signals_container.children) == 1:
+            pos = 0
+            while True:
+                button_tbe = timer_layout.children[pos]
+                if isinstance(button_tbe, WideButton):
+                    break
+                pos += 1
+            button_tbe.disabled = True
         timer_layout.height -= dp(100)
         self.ids.main_container.height -= dp(100)
 
@@ -70,8 +90,9 @@ class BeepTimerApp(App):
             if isinstance(button_tbr, AddTimerButton):
                 break
             pos += 1
+        self.num += 1
         timers_container.remove_widget(button_tbr)
-        timers_container.add_widget(TimerLayout())
+        timers_container.add_widget(TimerLayout(self.num))
         timers_container.add_widget(AddTimerButton())
         self.ids.main_container.height += dp(130)
 
@@ -258,11 +279,37 @@ class BeepTimerApp(App):
                 signal_info = {}
                 self.get_signal_container_info(child, signal_info)
                 signals_info.append(signal_info)
+            self.timers_info.append({'number': timer_layout.number,
+                                     'timer_time': timer_value,
+                                     'signals': signals_info})
             self.change_children_state(timer_layout, True)
         else:
             sender.text = 'Запустить таймер'
             timer_layout.started = False
+            pos = 0
+            while pos < len(self.timers_info):
+                if self.timers_info[pos]['number'] == \
+                        timer_layout.number:
+                    self.timers_info.pop(pos)
+                    break
+                pos += 1
             self.change_children_state(timer_layout, False)
+
+    def get_signal_container_info(self, parent, signal_info):
+        for child in parent.children:
+            if isinstance(child, SomeTimeTextInput):
+                signal_info['time_to_signal'] = int(child.text)
+            elif isinstance(child, TimeUnitLabel):
+                if child.text[1: -1] == 'сек':
+                    time_unit = 'second'
+                else:
+                    time_unit = 'minute'
+                signal_info['time_unit'] = time_unit
+            elif isinstance(child, MillisecondsTextInput):
+                signal_info['duration'] = int(child.text)
+            elif isinstance(child, FrequencyTextInput):
+                signal_info['frequency'] = int(child.text)
+            self.get_signal_container_info(child, signal_info)
 
     def change_children_state(self, parent, value):
         for child in parent.children:
@@ -287,22 +334,6 @@ class BeepTimerApp(App):
             elif isinstance(child, DeleteTimerButton):
                 child.disabled = value
             self.change_children_state(child, value)
-
-    def get_signal_container_info(self, parent, signal_info):
-        for child in parent.children:
-            if isinstance(child, SomeTimeTextInput):
-                signal_info['time_to_signal'] = int(child.text)
-            elif isinstance(child, TimeUnitLabel):
-                if child.text[1: -1] == 'сек':
-                    time_unit = 'second'
-                else:
-                    time_unit = 'minute'
-                signal_info['time_unit'] = time_unit
-            elif isinstance(child, MillisecondsTextInput):
-                signal_info['duration'] = int(child.text)
-            elif isinstance(child, FrequencyTextInput):
-                signal_info['frequency'] = int(child.text)
-            self.get_signal_container_info(child, signal_info)
 
 
 if __name__ == '__main__':
