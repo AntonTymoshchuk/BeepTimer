@@ -563,4 +563,6 @@ class BeepTimerApp(App):
         from kivy.config import Config
         Config.set('graphics', 'left', Window.left)
         Config.set('graphics', 'top', Window.top)
+        Config.set('graphics', 'width', Window.width)
+        Config.set('graphics', 'height', Window.height)
         Config.write()
