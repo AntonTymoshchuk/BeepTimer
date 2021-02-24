@@ -52,6 +52,7 @@
     background_active: 'colors/grey/200.png'
     background_disabled_normal: 'colors/grey/300.png'
     border: [0, 0, 0, 0]
+    on_text: app.on_text_change()
 
 <MinutesTextInput@ValueTextInput>:
     text: '5'
@@ -108,11 +109,13 @@
                 text: '   Время в: '
             StandardCheckBox:
                 active: True
+                time_unit: 'second'
                 on_active: app.set_second_time_unit(self)
             StandardLabel:
                 text: ' секундах, '
             StandardCheckBox:
                 active: False
+                time_unit: 'minute'
                 on_active: app.set_minute_time_unit(self)
             StandardLabel:
                 text: ' минутах'

@@ -15,7 +15,7 @@ class BeepThread(Thread):
         # (время до сигнала в секундах + длительность сигнала в секундах))
         # в минутах) % время таймера == 0.
         while True:
-            for timer_info in self.app.timers_info:
+            for timer_info in self.app.working_timers_info:
                 for signal_info in timer_info['signals']:
                     # текущая минута в секундах
                     current_time = datetime.now()
@@ -46,8 +46,6 @@ class BeepThread(Thread):
 
                     # время таймера
                     timer_time = timer_info['timer_time']
-
-                    print(global_time_target_in_minutes)
 
                     # проверка совпадения
                     if global_time_target_in_minutes % timer_time == 0:
