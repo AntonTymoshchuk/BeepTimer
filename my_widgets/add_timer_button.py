@@ -1,7 +1,7 @@
-from my_widgets.wide_button import WideButton
+from kivy.uix.anchorlayout import AnchorLayout
 
 
-class AddTimerButton(WideButton):
+class AddTimerButton(AnchorLayout):
     pass
 
 

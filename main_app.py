@@ -2,8 +2,8 @@ import os
 
 from kivy.app import App
 from kivy.metrics import dp
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 
 from my_widgets.add_signal_button import AddSignalButton
 from my_widgets.add_timer_button import AddTimerButton
@@ -64,12 +64,12 @@ class BeepTimerApp(App):
                 break
             pos += 1
         button_tbe.disabled = False
-        timer_layout.height += dp(100)
-        self.ids.main_container.height += dp(100)
+        timer_layout.height += dp(104)
+        self.ids.main_container.height += dp(104)
         self.save_timers_info()
 
     def remove_signal(self, sender):
-        signal_layout_tbr = sender.parent
+        signal_layout_tbr = sender.parent.parent
         signals_container = signal_layout_tbr.parent
         signals_container.remove_widget(signal_layout_tbr)
         timer_layout = signals_container.parent
@@ -81,12 +81,12 @@ class BeepTimerApp(App):
                     break
                 pos += 1
             button_tbe.disabled = True
-        timer_layout.height -= dp(100)
-        self.ids.main_container.height -= dp(100)
+        timer_layout.height -= dp(104)
+        self.ids.main_container.height -= dp(104)
         self.save_timers_info()
 
     def add_timer(self, sender):
-        timers_container = sender.parent
+        timers_container = sender.parent.parent
         pos = 0
         while True:
             button_tbr = timers_container.children[pos]
@@ -97,11 +97,11 @@ class BeepTimerApp(App):
         timers_container.remove_widget(button_tbr)
         timers_container.add_widget(TimerLayout(self.num))
         timers_container.add_widget(AddTimerButton())
-        self.ids.main_container.height += dp(130)
+        self.ids.main_container.height += dp(100)
         self.save_timers_info()
 
     def remove_timer(self, sender):
-        timer_layout_tbr = sender.parent.parent.parent
+        timer_layout_tbr = sender.parent.parent.parent.parent
         layout_height = timer_layout_tbr.height
         self.ids.main_container.remove_widget(timer_layout_tbr)
         self.ids.main_container.height -= layout_height
@@ -264,8 +264,8 @@ class BeepTimerApp(App):
             timer_layout.started = True
             header = None
             for child in timer_layout.children:
-                if isinstance(child, GridLayout):
-                    header = child
+                if isinstance(child, AnchorLayout):
+                    header = child.children[0]
                     break
             timer_value = None
             for child in header.children:
@@ -333,8 +333,8 @@ class BeepTimerApp(App):
     def get_timer_layout_info(self, timer, timer_info):
         header = None
         for child in timer.children:
-            if isinstance(child, GridLayout):
-                header = child
+            if isinstance(child, AnchorLayout):
+                header = child.children[0]
                 break
         timer_value = None
         for child in header.children:
@@ -358,6 +358,7 @@ class BeepTimerApp(App):
             signal_info = {}
             self.get_signal_container_info(child, signal_info)
             signals_info.append(signal_info)
+        signals_info.reverse()
         timer_info['timer_time'] = timer_value
         timer_info['signals'] = signals_info
 
@@ -452,8 +453,8 @@ class BeepTimerApp(App):
                 self.set_milliseconds_text_input_value(signal_layout, duration)
                 self.set_frequency_text_input_value(signal_layout, frequency)
                 signal_layouts.append(signal_layout)
-                timer_layout.height += dp(100)
-                self.ids.main_container.height += dp(100)
+                timer_layout.height += dp(104)
+                self.ids.main_container.height += dp(104)
             signals_container = None
             for child in timer_layout.children:
                 if isinstance(child, BoxLayout):
@@ -478,7 +479,7 @@ class BeepTimerApp(App):
                     pos += 1
                 button_tbe.disabled = False
             timer_layouts.append(timer_layout)
-            self.ids.main_container.height += dp(130)
+            self.ids.main_container.height += dp(100)
         pos = 0
         while True:
             button_tbr = self.ids.main_container.children[pos]
